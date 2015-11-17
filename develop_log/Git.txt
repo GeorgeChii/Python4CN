@@ -1,0 +1,170 @@
+﻿github.com<Windows版本课件>
+
+产品：pro Git
+
+产品功能：
+软件开发中的版本控制及开发管理
+
+Git由来：
+Linus Torvalds（1969年12月28日－），生于芬兰赫尔辛基市，拥有美国国籍。他是Linux内核的最早作者，随后发起了这个开源项目，担任Linux内核的首要架构师与项目协调者，是当今世界最著名的电脑程序员、黑客之一。他还发起了Git这个开源项目，并为主要的开发者。
+Git简介：速度、简单的设计、对非线性开发模式的强力支持（允许上千个并行开发的分支）、完全分布式、有能力高效管理类似Linux内核一样的超大规模项目（速度和数据量）
+
+Git基础概念：
+    1.直接记录快照、而非差异比较。只关心文件数据整体变化，有变化才保存，文件指纹索引，链接指向性，小型文件系统。
+    2.近乎所有操作都是本地操作。也就是常说的离线使用，上传远程仓库时需网络支持。
+    3.时刻保持数据完整性。任何改动和操作都被记录，采用SHA-1哈希值来生成指纹字符串，Git数据库的内容都是用哈希值来索引，而不是文件名。
+    4.多操作仅添加数据。一旦提交快照之后完全不用担心丢失数据，定期push到远程仓库。
+    5.文件的三种状态。任何文件Git内只有三种状态：已提交（committed），已修改（modified），已暂存（staged）。分别对应的三个工作区域为：本地仓库（git directory[repository]），工作目录（working directory），暂存区域（staging area）。
+    6.Git工作流程。
+        1.在工作目录中修改某些文件
+        2.对修改后的文件进行快照，保存到暂存区域
+        3.提交更新，永久转储到Git目录中
+
+Git安装：
+因为GFW的阻碍，我们将提供您可能无法获得的Windows安装包。
+一路默认安装即可，安装路径可以更改一下。
+
+Git配置：配置工作只需一次，即使软件升级也沿用此配置。
+    1.启动Git Bash后默认路径为主目录即Windows中$HOME变量指定的目录，一般都是/c/Documents and Settings/$USER，我这里的$USER是Administrator，所以我这里显示的是/c/Documents and Settings/Administrator，你那里显示的是什么？现在可以查看一下。
+    2.查看配置信息：
+        可以先用git config --list 查看所有配置信息列表内容
+        git config user.name 查看的是单个信息项目的内容
+    3.首先配置的信息：
+        git config --global user.name "George"
+        git config --global user.email george@example.com
+    4.配置代码编辑器：
+        可以选择你自己用的，Windows下默认的是Vi或Vim
+        git config --global core.editor vim
+    5.配置差异分析工具：
+        git config --global merge.tool vimdiff
+    
+Git help:
+    如果想了解命令都怎么用，可以使用自带的帮助文档功能，例如我们接下来要做的从远程仓库获得项目文件
+    git help clone
+    这个时候会跳出一个git安装目录下的本地帮助html页面，例如我这里的file:///D:/Git/mingw32/share/doc/git-doc/git-clone.html
+    
+获取Git仓库：方法有两种
+    1.把本地磁盘中的某个目录变成Git项目仓库
+        以d盘gitex1为例：
+显示结果：
+Administrator@edu MINGW32 ~
+$ cd d:\gitex1  #切换到d盘gitex1目录下
+
+Administrator@edu MINGW32 /d/gitex1
+$ ls   #查看该目录下有什么文件
+math1.py
+
+Administrator@edu MINGW32 /d/gitex1
+$ git init  #把gitex1初始化为Git项目仓库
+Initialized empty Git repository in D:/gitex1/.git/
+
+Administrator@edu MINGW32 /d/gitex1 (master)
+$
+        至此gitex1后面被标记(master)说明gitex1成为了Git项目仓库
+        在初始化完成，实际上生成了一个.git目录，这个就是Git仓库，所有Git需要的数据和资源都存放在这个目录中。gitex1就是前面说的工作目录            
+                    
+    2.从git远程服务器下载，做一个镜像仓库到本地磁盘中
+        以d盘gitex2为例，就是说我们把一个远程仓库下载到gitex2文件夹下：
+显示结果：
+Administrator@edu MINGW32 /d/gitex1 (master)
+$ cd d:\gitex2
+
+Administrator@edu MINGW32 /d/gitex2
+$ ls -l
+total 0
+
+Administrator@edu MINGW32 /d/gitex2
+$ git clone https://github.com/GeorgeChii/Python4CN
+Cloning into 'Python4CN'...
+remote: Counting objects: 12, done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 12 (delta 3), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (12/12), done.
+Checking connectivity... done.
+
+Administrator@edu MINGW32 /d/gitex2
+$ ls
+Python4CN/
+
+Administrator@edu MINGW32 /d/gitex2
+$ cd python4cn
+
+Administrator@edu MINGW32 /d/gitex2/python4cn (master)
+$ ls
+LICENSE  README.md
+
+常用文件操作：
+以README.md文件为例：
+    1.查询状态：
+        git status
+    2.添加跟踪文件：
+        git add README.md
+git add <file> ! git rm -cached <file>  #跟踪文件和解除跟踪
+    3.修改文件：
+        vim README.md
+    4.差异比较：
+        git diff    #这只是显示没有暂存的文件差异，就是说你在工作目录中修改了文件，但是没有进行git的暂存操作。
+    5.暂存文件：
+        git add README.md
+    6.查看暂存后的文件差异比较信息：
+        git diff --cached
+    7.放弃修改的暂存文件：
+        git checkout -- .gitignore  #这个操作相当于我们对.gitignore文件的内容修改全部失效。
+我们发现，git add <file> 这个命令原来不仅有增加跟踪的功能还有暂存文件的功能，到这里文件的三种状态中的2种我们知道了，那么第三种提交更新永久存储到Git目录中该如何操作呢？
+    8.提交更新：2种方式
+        1.git commit
+        将会出现vim界面，输入一些提交说明内容，这是必须的，否则无法提交成功，然后:wq保存退出即可，下面会有提示信息。
+不写提交说明内容退出vim界面会出现如下信息：提交更新失败
+Administrator@edu MINGW32 /d/gitex2/python4cn (master)
+$ git commit
+Aborting commit due to empty commit message.
+
+写入提交说明内容保存退出vim界面会出现如下信息：提交更新成功      
+Administrator@edu MINGW32 /d/gitex2/python4cn (master)
+$ git commit
+[master 6fdaa5d] More accurate expression
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Administrator@edu MINGW32 /d/gitex2/python4cn (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+nothing to commit, working directory clean
+        2.git commit -m "提交说明内容"
+        这种方式只要在双引号里面写上提交内容即可，不会出现vim界面了。
+    9.合并远程
+        git pull
+        第一行会有自动生成的黄色说明文字，我们只要执行:wq即可，返回提示信息如下：
+Administrator@edu MINGW32 /d/python4cn (master)
+$ git pull
+Already up-to-date!
+Merge made by the 'recursive' strategy.
+
+Administrator@edu MINGW32 /d/python4cn (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 4 commits.
+  (use "git push" to publish your local commits)
+nothing to commit, working directory clean
+    10.上传到服务器
+        git push <URL>
+操作结果： 
+Administrator@edu MINGW32 /d/python4cn (master)
+$ git push https://github.com/GeorgeChii/Python4CN
+Counting objects: 10, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (10/10), 1.79 KiB | 0 bytes/s, done.
+Total 10 (delta 4), reused 0 (delta 0)
+To https://github.com/GeorgeChii/Python4CN
+   029ed14..afeb9b6  master -> master
+
+至此，我们初步了解了一个Git的工作流程，整个介绍完毕后，可以达到什么效果呢？你可以使用Git来配合你的程序开发工作，建立了本地与服务器之间的协同工作，并且能够下载、修改、上传你的项目了，有几点需要提醒一下：
+如果有的文件没有上传到服务器的话，那么请查看你的.gitignore文件的配置情况，我这里对.gitignore做了修改，因为我要把本地工作目录中的.py文件传到服务器上，结果没有成功，原因就是其中忽略.py文件导致的，我把.py改成了.pyc即可，所以.gitignore的配置还是起了很重要的作用。
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+深入的学习，参考官方信息http://git-scm.com/docs/gittutorial
+
+         

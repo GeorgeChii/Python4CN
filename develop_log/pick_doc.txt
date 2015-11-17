@@ -1,0 +1,13 @@
+﻿pickle模块——对象串行化
+
+cPickle比pickle更快
+导入时，这样写会更好：
+try:
+    import cPickle as pickle
+except:
+    import pickle
+以上写法的解释为：
+    先尝试导入cPickle，并给定一个别名“pickle”，如果导入失败，
+    则退而使用pickle中的内置Python实现。
+    
+
